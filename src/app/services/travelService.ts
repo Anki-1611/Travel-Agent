@@ -250,10 +250,13 @@ export const sendWhatsAppMessage = (phoneNumbers: string[], message: string) => 
 
   const encodedMessage = encodeURIComponent(message);
 
-  // WhatsApp Web only supports one number per link
-  // So we can open multiple links one by one (user will need to click send for each)
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
   phoneNumbers.forEach((phone) => {
-    const url = `https://wa.me/${phone}?text=${encodedMessage}`;
+    const url = isMobile
+      ? `whatsapp://send?phone=${phone}&text=${encodedMessage}` // Mobile deep link
+      : `https://wa.me/${phone}?text=${encodedMessage}`;        // Desktop/Web link
+
     window.open(url, "_blank");
   });
 };
