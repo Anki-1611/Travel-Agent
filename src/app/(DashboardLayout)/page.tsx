@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { auth } from '@/firebase/firebase';
 import ListofTrips from './components/dashboard/ListofTrips';
+import ShareWhatsAppButton from './components/dashboard/ShareWhatsAppButton';
 
 const Dashboard = () => {
   const router = useRouter();

@@ -35,8 +35,8 @@ export interface Passenger {
   name: string;
   phone: string;
   address: string;
-  totalAmount: number;
-  advanceAmount: number;
+  totalAmount?: number;
+  advanceAmount?: number;
   dob: string;
   gender: string;
   passport: string;
@@ -111,10 +111,8 @@ export const updatePassengerPayment = async (
 export const getTripsForAgency = async () => {
   const user = auth.currentUser;
   if (!user) throw new Error("User not logged in");
-  console.log(user.uid, "user id");
   // Query trips where agencyId === logged-in user's UID
   const tripsCol = collection(db, "trips");
-  console.log(tripsCol,'tripsCol');
   const q = query(tripsCol, where("userId", "==", user.uid));
   const tripsSnap = await getDocs(q);
 
@@ -215,4 +213,47 @@ export const getPassengerById = async (tripId: string, passengerId: string) => {
     console.error("Error fetching passenger:", error);
     throw error;
   }
+};
+
+// -------------------------
+// Fetch all passengers for the agency (user) irrespective of trip
+// -------------------------
+export const getAllPassengersForAgency = async () => {
+  const user = auth.currentUser;
+  if (!user) throw new Error("User not logged in");
+
+  // 1. Get all trips for this user
+  const trips = await getTripsForAgency();
+
+  const allPassengers: (Passenger & { id: string; tripId: string })[] = [];
+
+  // 2. Loop through each trip and get passengers
+  for (const trip of trips) {
+    const passengersCol = collection(db, "trips", trip.id, "passengers");
+    const passengersSnap = await getDocs(passengersCol);
+
+    passengersSnap.docs.forEach((doc) => {
+      allPassengers.push({
+        id: doc.id,
+        tripId: trip.id,
+        ...(doc.data() as Passenger),
+      });
+    });
+  }
+
+  return allPassengers;
+};
+
+// services/whatsappService.ts
+export const sendWhatsAppMessage = (phoneNumbers: string[], message: string) => {
+  if (!phoneNumbers.length) return;
+
+  const encodedMessage = encodeURIComponent(message);
+
+  // WhatsApp Web only supports one number per link
+  // So we can open multiple links one by one (user will need to click send for each)
+  phoneNumbers.forEach((phone) => {
+    const url = `https://wa.me/${phone}?text=${encodedMessage}`;
+    window.open(url, "_blank");
+  });
 };

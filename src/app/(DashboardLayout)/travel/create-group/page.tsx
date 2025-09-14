@@ -127,7 +127,7 @@ const CreateGroupForm = () => {
   };
 
   return (
-    <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+    <Box display="flex" justifyContent="center" alignItems="center">
       <Card
         sx={{
           width: { xs: "100%", sm: "70%", md: "50%" },

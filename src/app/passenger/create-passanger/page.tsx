@@ -32,7 +32,6 @@ const CreatePassengerFormByPassenger = () => {
     name: "",
     phone: "",
     address: "",
-    totalAmount: "",
     advanceAmount: "",
     dob: "",
     gender: "",
@@ -53,7 +52,6 @@ const CreatePassengerFormByPassenger = () => {
       "name",
       "phone",
       "address",
-      "totalAmount",
       "advanceAmount",
       "dob",
       "gender",
@@ -85,10 +83,8 @@ const CreatePassengerFormByPassenger = () => {
         name: formData.name,
         phone: formData.phone,
         address: formData.address,
-        totalAmount: Number(formData.totalAmount),
         advanceAmount: Number(formData.advanceAmount),
         paidAmount: Number(formData.advanceAmount),
-        remainingAmount: Number(formData.totalAmount) - Number(formData.advanceAmount),
         dob: formData.dob,
         gender: formData.gender,
         passport: formData.passport,
@@ -96,7 +92,6 @@ const CreatePassengerFormByPassenger = () => {
 
       await addPassenger(tripId, passengerData);
       alert("Passenger added successfully!");
-      router.push("/"); // Redirect after submit
     } catch (err) {
       console.error(err);
       setError("Failed to save passenger.");
@@ -120,7 +115,6 @@ const CreatePassengerFormByPassenger = () => {
               <CustomTextField name="name" label="Name" value={formData.name} onChange={handleChange} fullWidth required />
               <CustomTextField name="phone" label="Phone Number" value={formData.phone} onChange={handleChange} fullWidth required />
               <CustomTextField name="address" label="Address" value={formData.address} onChange={handleChange} fullWidth required />
-              <CustomTextField name="totalAmount" label="Total Amount Received" type="number" value={formData.totalAmount} onChange={handleChange} fullWidth required />
               <CustomTextField name="advanceAmount" label="Advance Amount" type="number" value={formData.advanceAmount} onChange={handleChange} fullWidth required />
               <CustomTextField name="dob" label="Date of Birth" type="date" value={formData.dob} onChange={handleChange} fullWidth InputLabelProps={{ shrink: true }} required />
               <TextField select name="gender" label="Gender" value={formData.gender} onChange={handleChange} fullWidth required>

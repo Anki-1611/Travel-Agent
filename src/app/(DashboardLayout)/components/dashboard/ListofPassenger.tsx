@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import { IconEdit, IconTrash } from "@tabler/icons-react";
 import {
+    getAllPassengersForAgency,
     getPassengersForTrip,
     Passenger,
 } from "@/app/services/travelService";
@@ -27,18 +28,23 @@ const ListOfPassengers = () => {
     const pathname = usePathname();
     const searchParams = useSearchParams();
     const tripId = searchParams.get("tripId");
-
+    const tripName = searchParams.get("tripName"); 
     const dummyImage =
         "https://plus.unsplash.com/premium_photo-1690372791935-3efc879e4ca3?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
 
     const fetchPassengers = async () => {
-        if (!tripId) return;
         try {
-            const tripPassengers = await getPassengersForTrip(tripId);
+            let tripPassengers: Passenger[] = [];
+            if (tripId) {
+                tripPassengers = await getPassengersForTrip(tripId);
+            } else {
+                tripPassengers = await getAllPassengersForAgency();
+                console.log(tripPassengers,'tripPassengers');
+            }
             setPassengers(
                 tripPassengers.map((p: any) => ({
                     ...p,
-                    tripId,
+                    tripId: p.tripId || tripId, // optional tripId
                 }))
             );
         } catch (err) {
@@ -64,15 +70,20 @@ const ListOfPassengers = () => {
 
     const showActions = pathname === "/travel/passenger-list";
 
-    if (!tripId) {
-        return (
-            <Typography variant="body1" color="error">
-                No trip selected. Please provide a tripId in query params.
-            </Typography>
-        );
-    }
+    // if (!tripId) {
+    //     return (
+    //         <Typography variant="body1" color="error">
+    //             No trip selected. Please provide a tripId in query params.
+    //         </Typography>
+    //     );
+    // }
 
     return (
+         <Box>
+            {/* Heading */}
+            <Typography variant="h4" fontWeight={700} mb={3} textAlign="center">
+                Passengers from {tripName || "all the trips"}
+            </Typography>
         <Grid container spacing={3}>
             {passengers.map((passenger) => (
                 <Grid key={passenger.id} item xs={12} sm={6} md={4}>
@@ -143,7 +154,10 @@ const ListOfPassengers = () => {
                 </Grid>
             ))}
         </Grid>
+        </Box>
     );
 };
 
 export default ListOfPassengers;
+
+
