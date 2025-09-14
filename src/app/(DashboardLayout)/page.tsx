@@ -31,15 +31,6 @@ const Dashboard = () => {
   return (
     <PageContainer title="Dashboard" description="This is Dashboard">
       <Box>
-        {/* Button aligned right with margin bottom */}
-        <Box display="flex" justifyContent="flex-end" mb={3}>
-          <MuiLink href="/travel/create-group" underline="none">
-            <Button variant="contained" disableElevation color="primary">
-              Create Travel Group
-            </Button>
-          </MuiLink>
-        </Box>
-
         {/* Trips List */}
         <Grid container spacing={3}>
           <Grid item xs={12}>

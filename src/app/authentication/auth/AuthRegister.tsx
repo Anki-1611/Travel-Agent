@@ -233,8 +233,11 @@ const AuthRegister = () => {
                         <Button type="submit" variant="contained" color="primary" size="large" fullWidth sx={{ mt: 3 }}>
                             {loading ? 'Registering...' : 'Sign Up'}
                         </Button>
+                           <Button href="/authentication/login" variant="contained" color="primary" size="large" fullWidth sx={{ mt: 3 }}>
+                            {'Login'}
+                        </Button>
                     </Stack>
-                </form>
+                </form> 
             </Box>
         </Box>
     );

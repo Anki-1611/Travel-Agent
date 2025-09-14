@@ -25,22 +25,30 @@ const Register2 = () => (
     container
     justifyContent="center"
     alignItems="center"
-    sx={{ minHeight: "100vh" }}
+    sx={{ minHeight: "100%",width:'100%' }}
+    xs={{width:'100%'}}
+  
   >
     <Grid
       item
-      xs={12}
       sm={10}
       md={8}
       lg={6} // ✅ responsive width
       xl={5}
+      xs={{width:'100%'}}
+      className={'mobileW'}
     >
       <Card
         elevation={9}
         sx={{
           p: 4,
           zIndex: 1,
-          width: "100%", // ✅ full width inside Grid item
+              maxWidth: { xs: "100%", sm: 500, md: 600 }, // ✅ full width on mobile, constrained on larger
+        }}
+        xs={{
+          p: 4,
+          zIndex: 1,
+              maxWidth: { xs: "100%", sm: 500, md: 600 }, // ✅ full width on mobile, constrained on larger
         }}
       >
         <Box display="flex" justifyContent="center" mb={3}>

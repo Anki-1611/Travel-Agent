@@ -1,6 +1,6 @@
 // authService.ts
 import { auth, db } from "@/firebase/firebase";
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile,signOut } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 
 // -------------------------
@@ -49,4 +49,16 @@ export const registerUser = async (
 export const loginUser = async (email: string, password: string) => {
   const userCredential = await signInWithEmailAndPassword(auth, email, password);
   return userCredential.user;
+};
+
+// Logout
+// -------------------------
+export const logoutUser = async () => {
+  try {
+    await signOut(auth);
+    return true; // success
+  } catch (error) {
+    console.error("Logout failed:", error);
+    throw error;
+  }
 };

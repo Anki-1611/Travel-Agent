@@ -1,3 +1,18 @@
 *{
      font-family: 'Plus Jakarta Sans', Helvetica, Arial, sans-serif !important;
 }
+
+
+
+@media (max-width: 600px) {
+  .mobileW {
+    min-width: 100% !important;
+  }
+}
+
+@media (min-width: 0px) {
+    .css-oi9rlj-MuiPaper-root-MuiCard-root {
+        max-width: 100%;
+        padding: 0px !important;
+    }
+}
