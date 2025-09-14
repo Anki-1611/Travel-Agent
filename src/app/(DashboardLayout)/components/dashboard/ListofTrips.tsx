@@ -15,6 +15,7 @@ import {
 } from "@mui/material";
 import { IconEdit, IconTrash, IconUserPlus } from "@tabler/icons-react";
 import { getTripsForAgency, Trip, getPassengersForTrip, deleteTrip } from "@/app/services/travelService";
+import SharePassengerLink from "./SharePassengerLink";
 
 const dummyImage =
   "https://plus.unsplash.com/premium_photo-1690372791935-3efc879e4ca3?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
@@ -54,12 +55,16 @@ const ListofTrips = () => {
 
   const handleAddPassenger = (tripId: string) => {
     console.log("Add passenger to trip:", tripId);
-     router.push(`/travel/create-passenger?id=${tripId}`);
+    router.push(`/travel/create-passenger?id=${tripId}`);
     // Example: open modal or navigate to add passenger page
   };
 
   const handleViewPassenger = (tripId: string) => {
-     router.push(`/travel/passenger-list?tripId=${tripId}`);
+    router.push(`/travel/passenger-list?tripId=${tripId}`);
+  };
+
+  const handleShare = (tripId: string, tripName: string) => {
+    router.push(`/passenger/create-passanger?tripId=${tripId}&tripName=${tripName}`);
   };
 
   const showActions = pathname === "/travel/list";
@@ -138,6 +143,16 @@ const ListofTrips = () => {
                   >
                     View Passenger
                   </Button>
+                  {/* <Button
+                    variant="contained"
+                    color="secondary"
+                    startIcon={<IconUserPlus size={18} />}
+                    onClick={() => handleShare(trip.id,trip.name)}
+                    fullWidth
+                  >
+                    Share Link
+                  </Button> */}
+                  <SharePassengerLink tripId={trip.id} tripName={trip.name} />
                 </Box>
               )}
             </CardContent>
