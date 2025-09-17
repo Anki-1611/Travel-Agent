@@ -95,8 +95,8 @@ const ListofTrips = () => {
               </Typography>
 
               <Stack direction="row" spacing={1} mt={2}>
-                <Chip label={`Package: $${trip.packageAmount}`} color="primary" variant="outlined" size="small" />
-                <Chip label={`Passengers: ${trip.passengers.length}`} color="secondary" variant="outlined" size="small" />
+                <Chip label={`Package: ₹ ${trip.packageAmount}`} color="primary" variant="outlined" size="small" />
+                <Chip label={`Number of Passengers: ${trip.passengers.length}`} color="secondary" variant="outlined" size="small" />
               </Stack>
 
               {/* Action Buttons */}
