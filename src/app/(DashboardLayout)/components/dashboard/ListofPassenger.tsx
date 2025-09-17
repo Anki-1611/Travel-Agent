@@ -12,6 +12,11 @@ import {
     Button,
     Box,
     CardMedia,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogContentText,
+    DialogActions,
 } from "@mui/material";
 import { IconEdit, IconTrash } from "@tabler/icons-react";
 import {
@@ -24,6 +29,8 @@ const ListOfPassengers = () => {
     const [passengers, setPassengers] = useState<
         (Passenger & { id: string; tripId: string })[]
     >([]);
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [selectedPassenger, setSelectedPassenger] = useState<{ tripId: string; passengerId: string; name: string } | null>(null);
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
@@ -60,12 +67,24 @@ const ListOfPassengers = () => {
         router.push(`/travel/create-passenger?tripId=${tripId}&passengerId=${passengerId}`);
     };
 
-    const handleDelete = async (tripId: string, passengerId: string) => {
-        if (confirm("Are you sure you want to delete this passenger?")) {
-            // TODO: call deletePassenger(tripId, passengerId)
-            console.log("Delete passenger:", passengerId, "from trip:", tripId);
+    const handleDelete = async (tripId: string, passengerId: string, name: string) => {
+        setSelectedPassenger({ tripId, passengerId, name });
+        setDeleteDialogOpen(true);
+    };
+
+    const confirmDelete = async () => {
+        if (selectedPassenger) {
+            // TODO: call deletePassenger(selectedPassenger.tripId, selectedPassenger.passengerId)
+            console.log("Delete passenger:", selectedPassenger.passengerId, "from trip:", selectedPassenger.tripId);
+            setDeleteDialogOpen(false);
+            setSelectedPassenger(null);
             fetchPassengers();
         }
+    };
+
+    const cancelDelete = () => {
+        setDeleteDialogOpen(false);
+        setSelectedPassenger(null);
     };
 
     const showActions = pathname === "/travel/passenger-list";
@@ -112,13 +131,13 @@ const ListOfPassengers = () => {
 
                             <Stack direction="row" spacing={1} mt={2}>
                                 <Chip
-                                    label={`Total: $${passenger.totalAmount}`}
+                                    label={`Total: ₹ ${passenger.totalAmount}`}
                                     color="primary"
                                     variant="outlined"
                                     size="small"
                                 />
                                 <Chip
-                                    label={`Paid: $${passenger.advanceAmount}`}
+                                    label={`Paid: ₹ ${passenger.advanceAmount}`}
                                     color="success"
                                     variant="outlined"
                                     size="small"
@@ -143,7 +162,7 @@ const ListOfPassengers = () => {
                                     variant="outlined"
                                     color="error"
                                     startIcon={<IconTrash size={18} />}
-                                    onClick={() => handleDelete(passenger.tripId, passenger.id)}
+                                    onClick={() => handleDelete(passenger.tripId, passenger.id, passenger.name)}
                                     fullWidth
                                 >
                                     Delete
@@ -154,6 +173,30 @@ const ListOfPassengers = () => {
                 </Grid>
             ))}
         </Grid>
+
+        {/* Delete Confirmation Dialog */}
+        <Dialog
+            open={deleteDialogOpen}
+            onClose={cancelDelete}
+            aria-labelledby="delete-dialog-title"
+        >
+            <DialogTitle id="delete-dialog-title" color="error">
+                Confirm Delete
+            </DialogTitle>
+            <DialogContent>
+                <DialogContentText>
+                    Are you sure you want to delete passenger <b>{selectedPassenger?.name}</b>? This action cannot be undone.
+                </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={cancelDelete} color="primary" variant="outlined">
+                    Cancel
+                </Button>
+                <Button onClick={confirmDelete} color="error" variant="contained">
+                    Delete
+                </Button>
+            </DialogActions>
+        </Dialog>
         </Box>
     );
 };
