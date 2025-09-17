@@ -74,8 +74,31 @@ const SidebarItems = () => {
   return (
     < >
       <MUI_Sidebar width={"100%"} showProfile={false} themeColor={"#5D87FF"} themeSecondaryColor={'#49beff'} >
-
-        <Logo img='/images/logos/dark-logo.svg' component={Link} to="/" >Modernize</Logo>
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+          py={2}
+          mb={1}
+          sx={{
+            background: "linear-gradient(90deg, #5D87FF 0%, #49beff 100%)",
+            borderRadius: "5px",
+            boxShadow: 1,
+          }}
+        >
+          <Typography
+            variant="h5"
+            fontWeight={800}
+            color="#fff"
+            letterSpacing={2}
+            sx={{
+              fontFamily: "'Montserrat', 'Roboto', sans-serif",
+              textShadow: "0 2px 8px rgba(0,0,0,0.12)",
+            }}
+          >
+            Travel Admin
+          </Typography>
+        </Box>
 
         {renderMenuItems(Menuitems, pathDirect)}
         <Box px={2}>
