@@ -33,6 +33,7 @@ const CreateGroupForm = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState<any>(null);
+  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const router = useRouter();
 
   // ✅ Listen for auth state
@@ -72,10 +73,43 @@ const CreateGroupForm = () => {
     fetchTrip();
   }, [tripId]);
 
+  const validateForm = (data: typeof formData) => {
+    const errors: Record<string, string> = {};
+
+    // Name
+    if (!data.name.trim()) errors.name = "Trip name is required.";
+    else if (data.name.trim().length < 2)
+      errors.name = "Trip name must be at least 2 characters.";
+
+    // Start Date
+    if (!data.startDate) errors.startDate = "Start date is required.";
+
+    // End Date
+    if (!data.endDate) errors.endDate = "End date is required.";
+    else if (
+      data.startDate &&
+      data.endDate &&
+      new Date(data.endDate) < new Date(data.startDate)
+    )
+      errors.endDate = "End date cannot be before start date.";
+
+    // Places
+    if (!data.places || data.places.length === 0)
+      errors.places = "At least one place is required.";
+
+    // Package Amount
+    if (!data.packageAmount) errors.packageAmount = "Package amount is required.";
+    else if (isNaN(Number(data.packageAmount)) || Number(data.packageAmount) <= 0)
+      errors.packageAmount = "Package amount must be a positive number.";
+
+    return errors;
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     setError("");
+    setFieldErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -86,14 +120,11 @@ const CreateGroupForm = () => {
       return;
     }
 
-    if (
-      !formData.name ||
-      !formData.startDate ||
-      !formData.endDate ||
-      formData.places.length === 0 || // ✅ keep manual check
-      !formData.packageAmount
-    ) {
-      setError("All fields are mandatory.");
+    const errors = validateForm(formData);
+    setFieldErrors(errors);
+
+    if (Object.keys(errors).length > 0) {
+      setError("Please fix the errors below.");
       return;
     }
 
@@ -158,7 +189,8 @@ const CreateGroupForm = () => {
                   onChange={handleChange}
                   variant="outlined"
                   fullWidth
-                  required
+                  error={!!fieldErrors.name}
+                  helperText={fieldErrors.name}
                 />
               </Box>
 
@@ -174,7 +206,8 @@ const CreateGroupForm = () => {
                   variant="outlined"
                   fullWidth
                   InputLabelProps={{ shrink: true }}
-                  required
+                  error={!!fieldErrors.startDate}
+                  helperText={fieldErrors.startDate}
                 />
               </Box>
 
@@ -190,7 +223,8 @@ const CreateGroupForm = () => {
                   variant="outlined"
                   fullWidth
                   InputLabelProps={{ shrink: true }}
-                  required
+                  error={!!fieldErrors.endDate}
+                  helperText={fieldErrors.endDate}
                 />
               </Box>
 
@@ -222,11 +256,11 @@ const CreateGroupForm = () => {
                       variant="outlined"
                       placeholder="Add places"
                       fullWidth
-                    // ❌ remove required here, we are validating manually
+                      error={!!fieldErrors.places}
+                      helperText={fieldErrors.places}
                     />
                   )}
                 />
-
               </Box>
 
               <Box>
@@ -240,7 +274,8 @@ const CreateGroupForm = () => {
                   onChange={handleChange}
                   variant="outlined"
                   fullWidth
-                  required
+                  error={!!fieldErrors.packageAmount}
+                  helperText={fieldErrors.packageAmount}
                 />
               </Box>
 
